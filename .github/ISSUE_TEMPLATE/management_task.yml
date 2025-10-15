@@ -21,9 +21,3 @@ body:
       label: Task Details
       description: Additional details about the task.
       placeholder: e.g. "Include any relevant information or context."
-  - type: textarea
-    id: additional-context
-    attributes:
-      label: Additional Context
-      description: Add any other context or screenshots about the task here.
-      placeholder: e.g. "This task is part of a larger project to improve user onboarding."
