@@ -3,6 +3,7 @@ description: Create a management task.
 title: "What is the task?"
 labels: ["management task"]
 projects: "github/1"
+status: "backlog"
 assignees: []
 body:
   - type: markdown
