@@ -1,5 +1,4 @@
 name: Frontend CI/CD Pipeline
-description: Continuous Integration and Deployment pipeline for the frontend application.
 # Updated to use Node.js 22.x for optimal performance
 
 on:
@@ -32,7 +31,7 @@ jobs:
           path: |
             node_modules
             ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
