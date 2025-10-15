@@ -1,6 +1,6 @@
 name: Bug Report
 description: Create a report to help us improve.
-title: " "
+title: "What is the bug?"
 labels: ["bug"]
 project: "1"
 assignees: []
