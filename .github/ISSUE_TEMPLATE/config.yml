@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support
+    url: https://github.com/your-repo-url-here/discussions  # Replace with your discussions URL
+    about: Please visit our GitHub Discussions for support.
+  - name: Wiki
+    url: https://github.com/michaelekornrud/BouvetRadar/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml
+    about: Check out our project wiki for documentation and guides.
+  - name: Bug Report
+    url: https://github.com/michaelekornrud/BouvetRadar/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml
+    about: Report a bug using our bug report template.
+  
