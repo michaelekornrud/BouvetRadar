@@ -2,8 +2,7 @@ name: Management Task
 description: Create a management task.
 title: "What is the task?"
 labels: ["management task"]
-projects: "github/1"
-status: "backlog"
+projects: [1]
 assignees: []
 body:
   - type: markdown
@@ -16,6 +15,15 @@ body:
       label: Task Description
       description: A clear and concise description of the task you are suggesting.
       placeholder: e.g. "I need to update the user documentation for the new feature."
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      description: What is the initial status for this task?
+      options:
+        - Backlog
+        - In progress
+      default: 0  # This makes "Backlog" the default
   - type: textarea
     id: task-details
     attributes:
