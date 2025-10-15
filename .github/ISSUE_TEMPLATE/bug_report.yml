@@ -14,22 +14,19 @@ body:
     attributes:
       label: Description
       description: A clear and concise description of what the bug is.
-      placeholder: e.g "When I click the submit button, nothing happens."
-      
+      placeholder: e.g "When I click the submit button, nothing happens."    
   - type: input
     id: steps-to-reproduce
     attributes:
       label: Steps to Reproduce
       description: Steps to reproduce the behavior
-      placeholder: How can this issue be reproduced?
-      
+      placeholder: How can this issue be reproduced?      
   - type: input
     id: expected-behavior
     attributes:
       label: Expected Behavior
       description: A clear and concise description of what you expected to happen.
-      placeholder: e.g. "I expected the form to submit and show a success message."
-      
+      placeholder: e.g. "I expected the form to submit and show a success message."     
   - type: dropdown
     id: component
     attributes:
@@ -40,9 +37,6 @@ body:
         - Backend
         - Documentation
         - Other
-    validations:
-      required: true
-      
   - type: textarea
     id: additional-context
     attributes:
