@@ -2,7 +2,7 @@ name: Bug Report
 description: Create a report to help us improve.
 title: "What is the bug?"
 labels: ["bug"]
-projects: ["BouvetRadar"]
+projects: "github/1"
 assignees: []
 body:
   - type: markdown
