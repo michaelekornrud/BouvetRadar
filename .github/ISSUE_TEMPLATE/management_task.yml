@@ -1,5 +1,5 @@
 name: Management Task 
-description: Create a task or to-do item.
+description: Create a management task.
 title: "What is the task?"
 labels: ["management task"]
 projects: "github/1"
@@ -21,16 +21,6 @@ body:
       label: Task Details
       description: Additional details about the task.
       placeholder: e.g. "Include any relevant information or context."
-  - type: dropdown
-    id: component
-    attributes:
-      label: Component
-      description: Which component would this task relate to?
-      options:
-        - Frontend
-        - Backend
-        - Documentation
-        - Other
   - type: textarea
     id: additional-context
     attributes:
