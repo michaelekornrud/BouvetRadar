@@ -1,0 +1,50 @@
+.App {
+  text-align: center;
+  background-color: #fcf8f3;
+  min-height: 100vw;
+}
+
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Header {
+  min-height: 80px;
+  min-width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Header-logo img {
+  width: 124px;
+  height: 30px;
+}
+
+.App-title h1 {
+  margin: 0;
+}
+
+.App-title {
+  background-color: #11133c;
+  color: white;
+  padding: 10px;
+  font-size: x-large;
+  font-family: "Gill Sans Extrabold", sans-serif;
+}
+
+.App-main {
+  padding: 20px;
+  font-size: calc(10px + 1vmin);
+  color: #333;
+}
+
+p {
+  line-height: 1.6;
+  font-size: xx-large;
+  font-style: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

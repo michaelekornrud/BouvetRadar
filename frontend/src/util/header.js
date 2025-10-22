@@ -1,11 +1,9 @@
 function Header() {
   return (
     <div className="Header">
-      <header className="App-header">
-        <p>
-         Testing 123
-        </p>
-      </header>
+        <div className="Header-logo">
+          <img src="/Bouvet_Logo_Colossus.svg" alt="Bouvet Logo" />
+        </div>
     </div>
   );
 }

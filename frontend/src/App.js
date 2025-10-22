@@ -7,13 +7,13 @@ function App() {
       <header className="App-header">
         <Header />
       </header>
+      <div className="App-title">
+        <h1>BouvetRadar</h1>
+      </div>
       <main className='App-main'>
         <p>
           Velkommen til BouvetRadar!
         </p>
-        <p1>
-          This is a new paragraph added to enhance the content.
-        </p1>
       </main>
     </div>
   );
