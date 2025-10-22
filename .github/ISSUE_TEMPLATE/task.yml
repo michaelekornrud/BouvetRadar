@@ -1,0 +1,42 @@
+name: Task 
+description: Create a task or to-do item.
+title: "What is the task?"
+labels: ["task"]
+projects: "github/1"
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |      
+        Thanks for taking the time to create a task! Please provide as much detail as possible to help us understand and prioritize your request.
+  - type: input
+    id: task-description
+    attributes:
+      label: Task Description
+      description: A clear and concise description of the task you are suggesting.
+      placeholder: e.g. "I need to update the user documentation for the new feature."
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      description: What is the initial status for this task?
+      options:
+        - Backlog
+        - In progress
+      default: 0  # This makes "Backlog" the default
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component would this task relate to?
+      options:
+        - Frontend
+        - Backend
+        - Documentation
+        - Other
+  - type: textarea
+    id: task-details
+    attributes:
+      label: Task Details
+      description: Additional details about the task.
+      placeholder: e.g. "Include any relevant information or context."

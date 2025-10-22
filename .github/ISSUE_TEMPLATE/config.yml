@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support
+    url: https://github.com/michaelekornrud/BouvetRadar/discussions
+    about: Please visit our GitHub Discussions for support.
+  - name: Wiki
+    url: https://github.com/michaelekornrud/BouvetRadar/wiki
+    about: Check out our project wiki for documentation and guides.
