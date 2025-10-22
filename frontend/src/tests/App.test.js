@@ -24,3 +24,12 @@ test('root elements include expected CSS classes used for layout', () => {
   // header wrapper class used in App.js / App.css
   expect(container.querySelector('.App-header')).toBeInTheDocument();
 });
+
+test('renders footer with hyperref', () => {
+  render(<App />);
+  const hyperrefText = /Våre kontorer/i;
+  const contactText = screen.getByText(hyperrefText);
+  expect(contactText).toBeInTheDocument();
+  const link = screen.getByRole('link', { name: hyperrefText});
+  expect(link).toHaveAttribute('href', 'https://www.bouvet.no/om-bouvet/vare-kontorer');
+});

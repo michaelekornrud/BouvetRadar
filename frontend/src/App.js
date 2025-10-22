@@ -1,5 +1,6 @@
 import './style/App.css';
 import Header from './util/header.js';
+import Footer from './util/footer.js';
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
           Velkommen til BouvetRadar!
         </p>
       </main>
+      <footer className="App-footer">
+        <Footer />
+      </footer>
     </div>
   );
 }
