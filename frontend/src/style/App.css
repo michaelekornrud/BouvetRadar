@@ -38,14 +38,6 @@
   font-family: "Gill Sans Extrabold", sans-serif;
 }
 
-.App-main {
-  padding: 20px;
-  font-size: calc(10px + 1vmin);
-  color: #333;
-  /* Allow main content to grow/shrink and push footer to the bottom */
-  flex: 1 1 auto;
-}
-
 p {
   line-height: 1.6;
   font-size: xx-large;

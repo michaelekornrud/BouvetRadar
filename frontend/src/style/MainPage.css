@@ -1,0 +1,22 @@
+.App-main {
+  padding: 20px;
+  /* Allow main content to grow/shrink and push footer to the bottom */
+  flex: 1 1 auto;
+}
+
+.Card {
+    background-color: #f9ead4;
+    border: 1px solid darkslategrey;
+    border-radius: 20px;
+    padding: 6px 18px 6px 18px;
+    min-width: fit-content;
+    width: 20%;
+}
+
+.Card h2 {
+    font-size: large;
+}
+
+.Card p {
+    font-size: small;
+}
