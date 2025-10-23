@@ -1,7 +1,10 @@
 .App {
+  display: flex;
+  flex-direction: column;
   text-align: center;
   background-color: #fcf8f3;
-  min-height: 100vw;
+  /* Use viewport height so footer can be pinned at bottom on short pages */
+  min-height: 100vh;
 }
 
 .App-header {
@@ -10,7 +13,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .Header {
   min-height: 80px;
   min-width: 80%;
@@ -36,15 +38,23 @@
   font-family: "Gill Sans Extrabold", sans-serif;
 }
 
-.App-main {
-  padding: 20px;
-  font-size: calc(10px + 1vmin);
-  color: #333;
-}
-
 p {
   line-height: 1.6;
   font-size: xx-large;
   font-style: bold;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.App-footer {
+  background-color: #11133c;
+  color: white;
+  padding: 4px;
+}
+
+.App-footer p {
+  font-size: 11px;
+}
+
+.App-footer p a {
+  color: white;
 }
