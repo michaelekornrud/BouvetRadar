@@ -175,17 +175,25 @@ class CPVService:
     def get_main_categories() -> list[tuple]:
         """Get main category codes and names."""
         return [(cat.value, cat.name) for cat in CPVMainCategory]
+    
+    @staticmethod
+    def get_category_for_code(code: int) -> str:
+        """Helper function to determine category name for a code."""
+        if str(code).startswith('48'):
+            return "Software and Information Systems"
+        elif str(code).startswith('64'):
+            return "Telecommunications Services"
+        elif str(code).startswith('72'):
+            return "Data Services"
+        elif str(code).startswith('73'):
+            return "Research and Development"
+        elif str(code).startswith('79'):
+            return "Business Services"
+        elif str(code).startswith('80'):
+            return "Education and Exercise"
+        else:
+            return "Other"
 
-# Legacy support (if needed for backwards compatibility)
-cpv_codes = CPV_CODES
-cpv_codes_flipped = CPV_CODES_BY_NAME
-cpv_main_codes = {desc: code for desc, code in 
-                 [(CPVMainCategory.SOFTWARE_AND_INFORMATION_SYSTEMS.name, 
-                   CPVMainCategory.SOFTWARE_AND_INFORMATION_SYSTEMS.value),
-                  (CPVMainCategory.TELECOMMUNICATIONS_SERVICES.name,
-                   CPVMainCategory.TELECOMMUNICATIONS_SERVICES.value),
-                  (CPVMainCategory.DATA_SERVICES.name,
-                   CPVMainCategory.DATA_SERVICES.value)]}
 
 if __name__ == "__main__":
     # Example usage

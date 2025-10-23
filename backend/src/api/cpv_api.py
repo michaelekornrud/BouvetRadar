@@ -3,8 +3,7 @@ API endpoints for CPV codes
 Provides RESTful access to CPV data for frontend visualization
 """
 
-from flask import Flask, jsonify, request, Blueprint
-from flask_cors import CORS
+from flask import jsonify, request, Blueprint
 import sys
 import os
 
@@ -13,7 +12,7 @@ import os
 # Add the parent directory to Python path to import constants
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.service.cpv_service import CPVService, CPVMainCategory, CPV_CODES
+from src.service.cpv_service import CPVService, CPV_CODES
 
 cpv_bp = Blueprint('cpv', __name__, url_prefix='/api/cpv')
 
@@ -28,10 +27,10 @@ def get_main_categories():
         result = [
             {
                 "code": code,
-                "name": name.replace('_', ' ').title(),
+                "name": service.get_category_for_code(code),
                 "description": CPV_CODES.get(code, "")
             }
-            for code, name in categories
+            for code, _ in categories
         ]
         
         return jsonify({
@@ -45,6 +44,7 @@ def get_main_categories():
             "error": str(e)
         }), 500
     
+
 
 
 @cpv_bp.route('/codes', methods=['GET'])
@@ -72,7 +72,7 @@ def get_all_codes():
             {
                 "code": code,
                 "description": desc,
-                "category": _get_category_for_code(code)
+                "category": service.get_category_for_code(code)
             }
             for code, desc in codes.items()
         ]
@@ -115,10 +115,10 @@ def get_code_details(code: int):
         result = {
             "code": code,
             "description": description,
-            "category": _get_category_for_code(code),
+            "category": service.get_category_for_code(code),
             "related_codes": [
                 {"code": c, "description": d}
-                for c, d in list(related_codes.items())[:5]  # Limit to 5 related
+                for c, d in list(related_codes.items())
             ]
         }
         
@@ -142,7 +142,7 @@ def get_cpv_statistics():
         # Count codes by main category
         category_stats = {}
         for code in all_codes.keys():
-            category = _get_category_for_code(code)
+            category = service.get_category_for_code(code)
             category_stats[category] = category_stats.get(category, 0) + 1
         
         # Get top-level categories (first 2 digits)
@@ -158,11 +158,11 @@ def get_cpv_statistics():
             "category_details": [
                 {
                     "code": code,
-                    "name": name.replace('_', ' ').title(),
+                    "name": service.get_category_for_code(code),
                     "description": CPV_CODES.get(code, ""),
-                    "count": category_stats.get(_get_category_name_for_code(code), 0)
+                    "count": category_stats.get(service.get_category_for_code(code), 0)
                 }
-                for code, name in service.get_main_categories()
+                for code, _ in service.get_main_categories()
             ]
         }
         
@@ -175,25 +175,3 @@ def get_cpv_statistics():
             "success": False,
             "error": str(e)
         }), 500
-
-def _get_category_for_code(code: int) -> str:
-    """Helper function to determine category name for a code."""
-    if str(code).startswith('48'):
-        return "Software and Information Systems"
-    elif str(code).startswith('64'):
-        return "Telecommunications Services"
-    elif str(code).startswith('72'):
-        return "Data Services"
-    elif str(code).startswith('73'):
-        return "Research and Development"
-    elif str(code).startswith('79'):
-        return "Business Services"
-    elif str(code).startswith('80'):
-        return "Education Services"
-    else:
-        return "Other"
-
-def _get_category_name_for_code(code: int) -> str:
-    """Helper function to get enum-style name for a code."""
-    category = _get_category_for_code(code)
-    return category.upper().replace(' ', '_')
