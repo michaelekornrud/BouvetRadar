@@ -6,17 +6,10 @@ from src.api.cpv_api import cpv_bp
 from src.api.nuts_api import nuts_bp
 from src.api.styrk_api import styrk_bp
 
-class OrderedJSONEncoder(json.JSONEncoder):
-    def encode(self, o):
-        if isinstance(o, dict):
-            return json.dumps(o, separators=(',', ':'), ensure_ascii=False)
-        return super().encode(o)
     
 def create_app():
     """Application factory."""
     app = Flask(__name__)
-    app.json_encoder = OrderedJSONEncoder
-    app.config['JSON_SORT_KEYS'] = False
     CORS(app) # Enable CORS for React frontend
 
     # Register blueprints
