@@ -64,8 +64,6 @@ class SSBService:
             self._df = self._df[['code', 'parentCode', 'level', 'name']]
             # Create lookup dictionary
             self._codes_dict = dict(zip(self._df['code'], self._df['name']))
-        except FileNotFoundError:
-            raise FileNotFoundError(f"NUTS CSV file not found: {self.csv_path}")
         except Exception as e:
             raise Exception(f"Error loading NUTS data: {e}")
         
