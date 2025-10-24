@@ -18,3 +18,9 @@ jobs:
             actions: close-issue
             issue-number: ${{ github.event.issue.number }}
             close-reason: 'This issue has been automatically closed because it was labeled as "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
+      - name : Move to Cancelled Project Board
+        uses : alex-page/github-project-automation-plus@v0.8.3
+        with :
+          project : 'BouvetRadar'
+          column : 'Cancelled'
+          repo-token : ${{ secrets.GITHUB_TOKEN }}
