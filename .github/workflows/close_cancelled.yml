@@ -13,26 +13,18 @@ jobs:
     if: ${{ github.event.label.name == 'cancelled' && github.event.issue.state != 'closed' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Close Cancelled Issues
-        uses: actions-cool/issues-helper@v3
-        with:
-            actions: close-issue
-            issue-number: ${{ github.event.issue.number }}
-            close-reason: 'This issue has been automatically closed because it was labeled as "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
       - name : Comment on Closed Issue
         uses : actions-cool/issues-helper@v3
         with :
           actions : 'create-comment'
           issue-number : ${{ github.event.issue.number }}
           body : 'This issue has been closed as it was marked "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
-  automate-project-columns:
-    needs: close_cancelled
-    if: ${{ github.event.label.name == 'cancelled'}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: alex-page/github-project-automation-plus@v0.8.3
+      - name: Close Cancelled Issues
+        uses: actions-cool/issues-helper@v3
         with:
-          project: BouvetRadar
-          column: Cancelled
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+            actions: close-issue
+            issue-number: ${{ github.event.issue.number }}
+            close-reason: 'This issue has been automatically closed because it was labeled as "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
+      
+
 
