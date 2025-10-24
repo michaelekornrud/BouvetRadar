@@ -26,6 +26,7 @@ jobs:
           issue-number : ${{ github.event.issue.number }}
           body : 'This issue has been closed as it was marked "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
   automate-project-columns:
+    needs: close_cancelled
     if: ${{ github.event.label.name == 'cancelled' && github.event.issue.state == 'closed' }}
     runs-on: ubuntu-latest
     steps:
