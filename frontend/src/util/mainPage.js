@@ -14,65 +14,11 @@ function MainPage() {
           </div>
           <div className='Card'>
           <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YEEEEEEEEEEEEEEEEEEEEE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
+            employer="Bouvet"
+            title="Frontend Developer"
+            location="Sandvika"
+            expirationDate="31-12-2025"
+            source="LinkedIn"
           />
           </div>
           <div className='Card'>
@@ -86,65 +32,11 @@ function MainPage() {
           </div>
           <div className='Card'>
           <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YEEEEEEEEEEEEEEEEEEEEE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
+            employer="Bouvet"
+            title="Frontend Developer"
+            location="Sandvika"
+            expirationDate="31-12-2025"
+            source="LinkedIn"
           />
           </div>
           <div className='Card'>
@@ -158,65 +50,11 @@ function MainPage() {
           </div>
           <div className='Card'>
           <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YEEEEEEEEEEEEEEEEEEEEE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="YE"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
-          />
-          </div>
-          <div className='Card'>
-          <JobCard
-            employer="_"
-            title=""
-            location=""
-            expirationDate=""
-            source=""
+            employer="Bouvet"
+            title="Frontend Developer"
+            location="Sandvika"
+            expirationDate="31-12-2025"
+            source="LinkedIn"
           />
           </div>
         </div>
