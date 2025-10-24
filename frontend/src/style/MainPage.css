@@ -1,22 +1,43 @@
 .App-main {
-  padding: 20px;
-  /* Allow main content to grow/shrink and push footer to the bottom */
-  flex: 1 1 auto;
+    padding: 20px;
+    /* Allow main content to grow/shrink and push footer to the bottom */
+    flex: 1 0 auto;
+    margin: 0% 15%;
+    padding: 20px 15%;
+    height: fit-content;
 }
 
+/* Grid container for cards */
+.Cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    justify-content: space-evenly;
+}
+
+
+/* TODO: set a restiction on the cards that all text needs to be within the card */
+/* TODO: Ensure that the cards have a set size */
+
+/* Card wrapper (keeps JobCard centered inside) */
 .Card {
+    width: 100%;
+    max-width: 220px; /* keeps cards from becoming too wide */
     background-color: #f9ead4;
     border: 1px solid darkslategrey;
     border-radius: 20px;
-    padding: 6px 18px 6px 18px;
-    min-width: fit-content;
-    width: 20%;
+    padding: 6px 24px;
+    box-sizing: border-box;
 }
 
-.Card h2 {
-    font-size: large;
-}
-
-.Card p {
+/* Inner card content (not title) */
+.Job-card p {
     font-size: small;
+    text-align: left;
+}
+
+.Job-card, .Job-card h3, .Job-card p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }

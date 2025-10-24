@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .Header {
   min-height: 80px;
   min-width: 80%;
@@ -49,6 +50,7 @@ p {
   background-color: #11133c;
   color: white;
   padding: 4px;
+  position: relative;
 }
 
 .App-footer p {
