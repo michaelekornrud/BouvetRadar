@@ -1,0 +1,20 @@
+name : Auto Close Cancelled Issues
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  close_cancelled:
+    if: contains(github.event.issue.labels.*.name, 'cancelled')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Cancelled Issues
+        uses: actions-cool/issues-helper@v3
+        with:
+            actions: close-issue
+            issue-number: ${{ github.event.issue.number }}
+            close-reason: 'This issue has been automatically closed because it was labeled as "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'

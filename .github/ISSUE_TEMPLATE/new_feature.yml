@@ -39,18 +39,6 @@ body:
         - Nice to Have
         - Important
         - Critical
-  
-  - type: dropdown
-    id: component
-    attributes:
-      label: Component
-      description: Which component would this feature relate to?
-      options:
-        - Frontend
-        - Backend
-        - Documentation
-        - Other
-  
   - type: textarea
     id: additional-context
     attributes:

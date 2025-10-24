@@ -1,0 +1,60 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: #fcf8f3;
+  /* Use viewport height so footer can be pinned at bottom on short pages */
+  min-height: 100vh;
+}
+
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Header {
+  min-height: 80px;
+  min-width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Header-logo img {
+  width: 124px;
+  height: 30px;
+}
+
+.App-title h1 {
+  margin: 0;
+}
+
+.App-title {
+  background-color: #11133c;
+  color: white;
+  padding: 10px;
+  font-size: x-large;
+  font-family: "Gill Sans Extrabold", sans-serif;
+}
+
+p {
+  line-height: 1.6;
+  font-size: xx-large;
+  font-style: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.App-footer {
+  background-color: #11133c;
+  color: white;
+  padding: 4px;
+}
+
+.App-footer p {
+  font-size: 11px;
+}
+
+.App-footer p a {
+  color: white;
+}
