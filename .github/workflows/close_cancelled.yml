@@ -18,6 +18,12 @@ jobs:
             actions: close-issue
             issue-number: ${{ github.event.issue.number }}
             close-reason: 'This issue has been automatically closed because it was labeled as "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
+      - name : Comment on Closed Issue
+        uses : actions-cool/issues-helper@v3
+        with :
+          actions : add-comment
+          issue-number : ${{ github.event.issue.number }}
+          body : 'This issue has been closed as it was marked "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
       - name : Move to Cancelled Project Board
         uses : alex-page/github-project-automation-plus@v0.8.3
         with :
