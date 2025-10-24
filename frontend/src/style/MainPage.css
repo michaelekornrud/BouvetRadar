@@ -1,32 +1,30 @@
 .App-main {
-    padding: 20px;
+    padding: 1.5rem;
     /* Allow main content to grow/shrink and push footer to the bottom */
     flex: 1 0 auto;
-    margin: 0% 15%;
-    padding: 20px 15%;
+    margin: 0% 20%;
     height: fit-content;
 }
 
 /* Grid container for cards */
 .Cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
-    justify-content: space-evenly;
+    width: 100%;
+    box-sizing: border-box;
+    justify-items: center;
 }
-
-
-/* TODO: set a restiction on the cards that all text needs to be within the card */
-/* TODO: Ensure that the cards have a set size */
 
 /* Card wrapper (keeps JobCard centered inside) */
 .Card {
     width: 100%;
-    max-width: 220px; /* keeps cards from becoming too wide */
+    max-width: 90%; /* keeps cards from becoming too wide */
     background-color: #f9ead4;
     border: 1px solid darkslategrey;
     border-radius: 20px;
-    padding: 6px 24px;
+    padding: 0.5em 1em;
+    margin: 5%;
     box-sizing: border-box;
 }
 
