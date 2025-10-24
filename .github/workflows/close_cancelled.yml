@@ -6,6 +6,7 @@ on:
 
 permissions:
   issues: write
+  contents: write
 
 jobs:
   close_cancelled:
@@ -21,12 +22,16 @@ jobs:
       - name : Comment on Closed Issue
         uses : actions-cool/issues-helper@v3
         with :
-          actions : add-comment
+          actions : 'create-comment'
           issue-number : ${{ github.event.issue.number }}
           body : 'This issue has been closed as it was marked "cancelled". If you believe this was done in error, please reopen the issue or contact the maintainers.'
-      - name : Move to Cancelled Project Board
-        uses : alex-page/github-project-automation-plus@v0.8.3
-        with :
-          project : 'BouvetRadar'
-          column : 'Cancelled'
-          repo-token : ${{ secrets.GITHUB_TOKEN }}
+  automate-project-columns:
+    if: ${{ github.event.label.name == 'cancelled' && github.event.issue.state == 'closed' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: BouvetRadar
+          column: Cancelled
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
