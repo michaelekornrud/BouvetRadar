@@ -16,15 +16,6 @@ body:
       description: A clear and concise description of the task you are suggesting.
       placeholder: e.g. "I need to update the user documentation for the new feature."
   - type: dropdown
-    id: status
-    attributes:
-      label: Status
-      description: What is the initial status for this task?
-      options:
-        - Backlog
-        - In progress
-      default: 0  # This makes "Backlog" the default
-  - type: dropdown
     id: component
     attributes:
       label: Component

@@ -15,17 +15,6 @@ body:
       label: Description
       description: A clear and concise description of what the bug is.
       placeholder: e.g "When I click the submit button, nothing happens."
-  - type: dropdown
-    id: status
-    attributes:
-      label: Status
-      description: What is the initial status for this task?
-      options:
-        - Bugs
-        - In progress
-      default: 0
-    validations:
-      required: true
   - type: input
     id: steps-to-reproduce
     attributes:
