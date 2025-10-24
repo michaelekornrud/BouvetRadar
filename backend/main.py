@@ -1,6 +1,5 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-import json
 
 from src.api.cpv_api import cpv_bp
 from src.api.nuts_api import nuts_bp

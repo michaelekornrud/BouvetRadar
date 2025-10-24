@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   close_cancelled:
-    if: contains(github.event.issue.labels.*.name, 'cancelled')
+    if: ${{ github.event.label.name == 'cancelled' && github.event.issue.state != 'closed' }}
     runs-on: ubuntu-latest
     steps:
       - name: Close Cancelled Issues
