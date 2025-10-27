@@ -1,4 +1,4 @@
-import CPVCategorieNamesList from './importData.js'
+import CPVCategorieNamesList from '../util/importData.js'
 
 function FilterSideBar() {
     return (
