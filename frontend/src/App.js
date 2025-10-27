@@ -3,7 +3,6 @@ import './style/MainPage.css';
 import Header from './util/header.js';
 import Footer from './util/footer.js';
 import MainPage from './util/mainPage.js';
-import CPVCategoriesList from './importData.js';
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
       </div>
       <main className='App-main'>
         <MainPage />
-        <CPVCategoriesList />
       </main>
       <footer className="App-footer">
         <Footer />

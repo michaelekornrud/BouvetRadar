@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 
-function CPVCategoriesList() {
+const pathBackendApi = 'http://10.99.40.109:8080/api';
+
+function CPVCategorieNamesList() {
     const [codes, setCodes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://10.99.40.111:8080/api/cpv/categories')
+        fetch(`${pathBackendApi}/cpv/categories`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -27,15 +29,20 @@ function CPVCategoriesList() {
     if (error) return <div>Feil: {error}</div>;
 
     return (
-        <div>
-            {codes.map(code => (
-                <div key={code.code}>
-                    <h3>{code.code}</h3>
-                    <p>{code.description}</p>
-                </div>
+        <div className='Filter-options'>
+            {codes.map(option => (
+                AddOptionWithCheckbox(option)
             ))}
         </div>
     );
 }
 
-export default CPVCategoriesList;
+function AddOptionWithCheckbox(option){
+    return (
+        <div className='Option'>
+            <input type='checkbox' id={option.code}/> <p>{option.description}</p>
+        </div>
+    );
+}
+
+export default CPVCategorieNamesList;
