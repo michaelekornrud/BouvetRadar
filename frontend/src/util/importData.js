@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const pathBackendApi = 'http://10.99.40.109:8080/api';
+const pathBackendApi = `http://localhost:8080/api`;
 
 function CPVCategorieNamesList() {
     const [codes, setCodes] = useState([]);
