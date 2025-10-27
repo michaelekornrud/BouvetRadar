@@ -1,19 +1,53 @@
 .App-main {
-    padding: 1.5rem;
+    padding: 1.5rem 0 1.5rem 1.5rem;
     /* Allow main content to grow/shrink and push footer to the bottom */
     flex: 1 0 auto;
-    margin: 0% 20%;
+    margin: 0% 30rem 0% 0%;
     height: fit-content;
+    gap: 2rem;
 }
 
-/* Grid container for cards */
-.Cards {
+.Main {
+    display: flex;
+    flex-direction: row;
+    /* prevent sidebar height from stretching the card grid
+       (default align-items: stretch makes both children the same height) */
+    align-items: flex-start;
+}
+
+.Side-bar {
+    width: 24rem;
+}
+
+.Filter p {
+    font-size: small;
+    text-align: left;
+}
+
+.Filter h2 {
+    text-align: left;
+}
+
+.Filter .Option {
+    display: flex;
+    align-items: flex-start;
+    margin: 0.5em;
+}
+
+.Filter .Option p {
+    margin: 0%;
+}
+
+.Card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     width: 100%;
     box-sizing: border-box;
     justify-items: center;
+    /* Make grid rows/content align to the start of the grid area instead of
+       stretching to fill available height from the flex parent */
+    margin: 2rem;
 }
 
 /* Card wrapper (keeps JobCard centered inside) */
