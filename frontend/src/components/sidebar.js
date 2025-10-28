@@ -1,10 +1,19 @@
 import CPVCategorieNamesList from '../util/importData.js'
 
 function FilterSideBar() {
+    const [cpvCategories] = CPVCategorieNamesList();
+
     return (
-        <div className="Filter">
+        <div className="Filter">            
             <h2>Filter</h2>
-            <CPVCategorieNamesList/>
+            <div className='Filter-options'>
+            {
+                cpvCategories.map(option =>                
+                    <div className='Option' key={option.code}>
+                        <input type='checkbox' id={option.code} /> <p>{option.description}</p>
+                    </div>
+            )}
+        </div>
         </div>
     )
 }
