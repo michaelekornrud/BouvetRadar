@@ -1,5 +1,6 @@
 import JobCard from './jobCard.js';
 import FilterSideBar from './sidebar.js';
+import SearchBar from './searchBar.js';
 
 function MainPage() {
     return (
@@ -35,6 +36,9 @@ function MainPage() {
               source="LinkedIn"
             />
             </div>
+          </div>
+          <div className='Search-bar'>
+            <SearchBar/>
           </div>
         </div>
     );
