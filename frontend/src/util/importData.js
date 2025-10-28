@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 
 const pathBackendApi = `http://localhost:8080/api`;
 
-function CPVCategorieNamesList() {
-    const [codes, setCodes] = useState([]);
+const useFetch = (apiEndpoint) => {
+    const [fetchedData, setFetchedData] = useState([]);
+    const url = `${pathBackendApi}/${apiEndpoint}`;
 
     useEffect(() => {
-        fetch(`${pathBackendApi}/cpv/categories`)
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(response.status);
@@ -14,11 +15,15 @@ function CPVCategorieNamesList() {
                 return response.json();
             })
             .then(data => {
-                setCodes(data.data);
+                setFetchedData(data.data);
             });
-    }, [pathBackendApi]);
+    }, [url]);
 
-    return [codes];
-}
+    return [fetchedData];
+};
+
+const CPVCategorieNamesList = () => {
+    return useFetch('cpv/categories');
+};
 
 export default CPVCategorieNamesList;
