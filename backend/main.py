@@ -4,6 +4,7 @@ from flask_cors import CORS
 from src.api.cpv_api import cpv_bp
 from src.api.nuts_api import nuts_bp
 from src.api.styrk_api import styrk_bp
+from src.api.doffin_api import doffin_bp
 
     
 def create_app():
@@ -15,6 +16,7 @@ def create_app():
     app.register_blueprint(cpv_bp)
     app.register_blueprint(nuts_bp)
     app.register_blueprint(styrk_bp)
+    app.register_blueprint(doffin_bp)
 
     @app.route('/api/health', methods=['GET'])
     def health_check():

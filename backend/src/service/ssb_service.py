@@ -4,9 +4,9 @@ NUTS Codes Service class
 
 import pandas as pd
 from enum import Enum
-import requests
 import io
 import json
+from src.clients.ssb_client import SSBClient
 
 
 class SSBLevel(Enum):
@@ -19,46 +19,23 @@ class SSBLevel(Enum):
 class SSBService:
     """Service class for NUTS code operations."""
 
-    def __init__(self, version : str):
+    def __init__(self, version : str | None = None):
           self._df: pd.DataFrame | None = None
           self._codes_dict: dict[str, str] | None = None
-          self._response = None
           self._version = version
-          self._make_request()
-          self._load_data()
-          
-
-    def _make_request(self) -> None:
-        """Make HTTP request to SSB API to fetch data."""
-        if self._version is None: 
-            raise Exception("Version cannot be none.")
-        
-
-        url = f'https://data.ssb.no/api/klass/v1/versions/{self._version}'
-        headers = { 'Accept' : 'text/csv',
-                    'charset' : 'ISO-8859-1'
-                }
-        
-        try: 
-            response = requests.get(url=url, headers=headers)
-            response.raise_for_status()
-
-            print(f"Status Code: {response.status_code}")
-            print(f"Content-Type: {response.headers.get('content-type')}")
-            # print(f"Content: {response.text}")  # First 200 chars
-            
-            self._response = response
-        except requests.exceptions.RequestException as e:
-            print(f"Request failed: {e}")
+          self._client = SSBClient()
+          if version is not None:
+            self._load_data()         
 
 
-    
     def _load_data(self) -> None : 
         """Load data from API and process it."""
         try: 
-            # print(type(self._response.text))
-            file = io.StringIO(self._response.text)
+            # Use client to fetch data
+            response = self._client.get_version(self._version)
 
+            # Process data
+            file = io.StringIO(response.text)
             self._df = pd.read_csv(file, sep=";", encoding="utf-8")
             # Keep only needed columns
             self._df = self._df[['code', 'parentCode', 'level', 'name']]
@@ -71,13 +48,22 @@ class SSBService:
         """Get description for a code."""
         return self._codes_dict.get(code)
     
-    def get_code_by_name(self, name: str) -> str | None:
-        """Get code by name (case insensitive)"""
-        name_lower = name.lower
-        for code, desc in self._codes_dict.items():
-            if desc.lower == name_lower:
-                return code
+    def get_code_by_name(self, name: str, max_level: int | None = None) -> str | None:
+        """Get code by name (case insensitive), optionally filtering by max level"""
+        name_lower = name.lower()
+        
+        # Filter dataframe by name
+        matches = self._df[self._df['name'].str.lower() == name_lower]
+        
+        # Further filter by max level if specified
+        if max_level is not None:
+            matches = matches[matches['level'] <= max_level]
+        
+        if not matches.empty:
+            code = matches.iloc[0]['code']
+            return code
         return None
+    
 
     def get_by_level(self, level: str) -> list[dict[str, str]]:
         """Get all codes entries by level"""
@@ -98,8 +84,7 @@ class SSBService:
         ]
 
 
-
-    def search_by_bame(self, name: str) -> str | None: 
+    def search_by_name(self, name: str) -> str | None: 
         """Search codes by name (case-insensitive)."""
         query_lower = name.lower()
         matches = self._df[
@@ -115,6 +100,7 @@ class SSBService:
             }
             for row in matches.itertuples()
         ]
+    
 
     def get_parent(self, code: str) -> dict[str, str] | None:
         """Get parent code for given code."""
@@ -134,6 +120,7 @@ class SSBService:
         """Get all codes as dictionary."""
         return self._codes_dict.copy()
 
+    # TODO: Implement export functionality if needed
     def export_to_json(self, output_path: str, format_type: str = "flat") -> None:
         ...
 

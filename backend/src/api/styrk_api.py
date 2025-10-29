@@ -4,13 +4,7 @@ Provides RESTful access to STYRK data for frontend visualization
 """
 
 from flask import jsonify, Blueprint
-import sys
-import os
-
-# Add the parent directory to Python path to import constants
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from src.service.ssb_service import STYRKService, SSBLevel
+from ..service.ssb_service import STYRKService, SSBLevel
 
 styrk_bp = Blueprint('styrk', __name__, url_prefix='/api/styrk')
 

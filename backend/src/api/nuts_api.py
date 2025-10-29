@@ -4,13 +4,7 @@ Provides RESTful access to NUTS data for frontend visualization
 """
 
 from flask import jsonify, Blueprint
-import sys
-import os
-
-# Add the parent directory to Python path to import constants
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from src.service.ssb_service import NUTSService, SSBLevel
+from ..service.ssb_service import NUTSService, SSBLevel
 
 nuts_bp = Blueprint('nuts', __name__, url_prefix='/api/nuts')
     
