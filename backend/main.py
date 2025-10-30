@@ -6,6 +6,8 @@ from src.api.nuts_api import nuts_bp
 from src.api.styrk_api import styrk_bp
 from src.api.doffin_api import doffin_bp
 
+from exceptions.bouvet_radar_ecxeption import BouvetRadarException
+
     
 def create_app():
     """Application factory."""
@@ -26,6 +28,12 @@ def create_app():
             "message": "API is running",
             "version": "1.0.0"
         })
+    
+    @app.errorhandler(BouvetRadarException)
+    def handle_bouvet_radar_exception(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
 
     # Global error handler
     @app.errorhandler(404)
