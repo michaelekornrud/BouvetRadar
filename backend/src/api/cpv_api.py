@@ -7,6 +7,8 @@ from flask import jsonify, request, Blueprint
 import sys
 import os
 
+from exceptions import CPVCodeNotFoundError, InvalidParameterTypeError
+
 
 
 # Add the parent directory to Python path to import constants
@@ -56,13 +58,34 @@ def get_all_codes():
         # Check for query parameters
         category = request.args.get('category')
         search = request.args.get('search')
+
+        if category: 
+            try: 
+                category_int = int(category)
+            except ValueError:
+                raise InvalidParameterTypeError(
+                    parameter="category",
+                    expected_type="integer",
+                    received_value=category
+                )
+            
+        if search and category:
+            # Search within a category
+            all_codes_in_category = service.get_codes_by_category(category_int)
+            if not all_codes_in_category:
+                raise CPVCodeNotFoundError(f"for category '{category}'")
+            
+            codes = {code: desc for code, desc in all_codes_in_category.items()
+                     if search.lower() in desc.lower()}
+            if not codes:
+                raise CPVCodeNotFoundError(f"for search '{search}' in category '{category}'")
         
-        if search:
+        elif search:
             # Search in descriptions
             codes = service.search_descriptions(search)
         elif category:
             # Filter by category
-            codes = service.get_codes_by_category(int(category))
+            codes = service.get_codes_by_category(category_int)
         else:
             # Get all codes
             codes = service.get_all_codes()
@@ -103,10 +126,7 @@ def get_code_details(code: int):
         description = service.get_description(code)
         
         if not description:
-            return jsonify({
-                "success": False,
-                "error": "CPV code not found"
-            }), 404
+            raise CPVCodeNotFoundError(code)
         
         # Get related codes in the same category
         related_codes = service.get_codes_by_category(code)
