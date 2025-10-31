@@ -26,9 +26,9 @@ def search_doffin_for_data():
     
     # Validate all parameters
     search_str = validate_search_str(request.args.get('search'))
-    cpv_codes = validate_cpv_codes(request.args.get('cpvCodes'))
-    location_ids = validate_location_ids(request.args.get('locationIds'))
-    status = validate_status(request.args.get('status'))
+    cpv_codes = validate_cpv_codes(request.args.getlist('cpvCode'))
+    location_ids = validate_location_ids(request.args.getlist('location'))
+    status = validate_status(request.args.getlist('status'))
     hits_per_page = validate_hits_per_page(request.args.get('hitsPerPage', '100'))
     page = validate_page(request.args.get('page', '1'))
     

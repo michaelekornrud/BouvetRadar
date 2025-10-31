@@ -83,77 +83,73 @@ def validate_search_str(search_str: str | None) -> str | None:
     return search_str
 
 
-def validate_cpv_codes(cpv_codes_str: str | None) -> list[str] | None:
+def validate_cpv_codes(cpv_codes_list: list[str] | None) -> list[str] | None:
     """Validate CPV codes parameter.
     
+    CPV codes should be numeric strings (e.g., '48000000').
+    
     Args:
-        cpv_codes_str: Comma-separated CPV codes from request
+        cpv_codes_list: List of CPV codes from request
         
     Returns:
         List of validated CPV codes or None
         
     Raises:
-        ValidationError: If CPV codes format is invalid
+        ValidationError: If any CPV code format is invalid
     """
-    if not cpv_codes_str:
+    if not cpv_codes_list:
         return None
     
-    try:
-        cpv_list = [code.strip() for code in cpv_codes_str.split(',')]
-        for code in cpv_list:
-            if not code.isdigit():
-                raise ValidationError(
-                    f"Invalid CPV code format: {code}",
-                    field="cpvCodes",
-                    value=code
-                )
-        return cpv_list
-    except ValidationError:
-        raise
-    except Exception:
+    # Strip whitespace and filter empty strings
+    cpv_codes = [code.strip() for code in cpv_codes_list if code and code.strip()]
+    
+    if not cpv_codes:
+        return None
+    
+    # Find invalid codes (not all digits)
+    invalid_codes = [code for code in cpv_codes if not code.isdigit()]
+    
+    if invalid_codes:
         raise ValidationError(
-            "Invalid CPV codes format",
+            f"Invalid CPV code format (must be numeric): {', '.join(invalid_codes)}",
             field="cpvCodes",
-            value=cpv_codes_str
+            value=str(invalid_codes)
         )
+    
+    return cpv_codes
 
 
-def validate_location_ids(location_ids_str: str | None) -> list[str] | None:
+def validate_location_ids(location_ids_list: list[str] | None) -> list[str] | None:
     """Validate location IDs parameter.
     
+    Location IDs can be NUTS codes (alphanumeric, e.g., 'NO081') or location names.
+    
     Args:
-        location_ids_str: Comma-separated location IDs from request
+        location_ids_list: List of location IDs from request
         
     Returns:
-        List of validated location IDs or None
+        List of validated and stripped location IDs or None
         
     Raises:
-        ValidationError: If location IDs format is invalid
+        ValidationError: If location IDs are empty after stripping
     """
-    if not location_ids_str:
+    if not location_ids_list:
         return None
     
-    try:
-        location_list = [loc.strip() for loc in location_ids_str.split(',')]
-        for loc in location_list:
-            if not loc.isdigit():
-                raise ValidationError(
-                    f"Invalid location ID format: {loc}",
-                    field="locationIds",
-                    value=loc
-                )
-        return location_list
-    except ValidationError:
-        raise
-    except Exception:
+    # Strip whitespace and filter empty strings
+    location_ids = [loc.strip() for loc in location_ids_list if loc and loc.strip()]
+    
+    if not location_ids:
         raise ValidationError(
-            "Invalid location IDs format",
+            "Location IDs cannot be empty",
             field="locationIds",
-            value=location_ids_str
+            value=str(location_ids_list)
         )
+    
+    return location_ids
 
 
-def validate_status(status: str | None) -> str | None:
+def validate_status(status: list[str] | None) -> list[str] | None:
     """Validate status parameter.
     
     Args:
@@ -167,12 +163,14 @@ def validate_status(status: str | None) -> str | None:
     """
     if not status:
         return None
-    
+    status_list = []
     valid_statuses = ['active', 'expired', 'cancelled', 'awarded']
-    if status.lower() not in valid_statuses:
-        raise ValidationError(
-            f"Invalid status. Must be one of: {', '.join(valid_statuses)}",
-            field="status",
-            value=status
-        )
-    return status.lower()
+    for stat in status:
+        if stat.lower() not in valid_statuses:
+            raise ValidationError(
+                f"Invalid status. Must be one of: {', '.join(valid_statuses)}",
+                field="status",
+                value=status
+            )
+        status_list.append(stat.upper())
+    return status_list
