@@ -1,6 +1,8 @@
 """HTTP Client for SSB API interactions."""
 import requests
 
+from exceptions import ExternalAPIError, APITimeoutError
+
 class SSBClient:
     """Handles raaw HTTP communication with the SSB API."""
     BASE_URL = "https://data.ssb.no/api/klass/v1/versions/"
@@ -17,6 +19,7 @@ class SSBClient:
             response = requests.get(url=url, headers=headers)
             response.raise_for_status()
             return response
-        except requests.exceptions.RequestException as e:
-            print(f"Request failed: {e}")
-            return ""
+        except requests.RequestException as e:
+            raise ExternalAPIError("Failed to fetch data from external API.", service="SSB Service", original_error=e) from e
+        except requests.Timeout as e:
+            raise APITimeoutError(service="SSB NUTS", timeout_seconds=30) 

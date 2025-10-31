@@ -8,6 +8,8 @@ import io
 import json
 from src.clients.ssb_client import SSBClient
 
+from exceptions import DataProcessingError, TransformationError, ParsingError
+
 
 class SSBLevel(Enum):
     """SSB hierarchy levels."""
@@ -41,8 +43,12 @@ class SSBService:
             self._df = self._df[['code', 'parentCode', 'level', 'name']]
             # Create lookup dictionary
             self._codes_dict = dict(zip(self._df['code'], self._df['name']))
-        except Exception as e:
-            raise Exception(f"Error loading NUTS data: {e}")
+        except DataProcessingError as e:
+            raise DataProcessingError(f"Error loading NUTS data: {e}")
+        except TransformationError as e:
+            raise TransformationError(f"Error transforming NUTS data: {e}")
+        except ParsingError as e:
+            raise ParsingError(f"Error parsing NUTS data: {e}")
         
     def get_description(self, code: str) -> str | None: 
         """Get description for a code."""
