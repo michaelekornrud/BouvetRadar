@@ -5,11 +5,8 @@ import SearchBar from './searchBar.js';
 function MainPage() {
     return (
         <div className='Main'>
-          <div className='Side-bar'>
-            <FilterSideBar/>
-          </div>
+          <FilterSideBar/>
           <div className='Card-grid'>
-            <div className='Card'>
             <JobCard
               employer="Bouvet"
               title="Frontend Developer"
@@ -17,8 +14,6 @@ function MainPage() {
               expirationDate="31-12-2025"
               source="LinkedIn"
             />
-            </div>
-            <div className='Card'>
             <JobCard
               employer="Bouvet"
               title="Frontend Developer"
@@ -26,8 +21,6 @@ function MainPage() {
               expirationDate="31-12-2025"
               source="LinkedIn"
             />
-            </div>
-            <div className='Card'>
             <JobCard
               employer="Bouvet"
               title="Frontend Developer"
@@ -35,7 +28,6 @@ function MainPage() {
               expirationDate="31-12-2025"
               source="LinkedIn"
             />
-            </div>
           </div>
           <div className='Search-bar'>
             <SearchBar/>

@@ -15,26 +15,22 @@
     align-items: flex-start;
 }
 
-.Side-bar {
+.Filter-sidebar {
     width: 24rem;
+    text-align: left;
 }
 
-.Filter p {
+.Filter-sidebar p {
     font-size: small;
-    text-align: left;
 }
 
-.Filter h2 {
-    text-align: left;
-}
-
-.Filter .Option {
+.Filter-sidebar .Option {
     display: flex;
     align-items: flex-start;
     margin: 0.5em;
 }
 
-.Filter .Option p {
+.Filter-sidebar .Option p {
     margin: 0%;
 }
 
@@ -51,9 +47,9 @@
 }
 
 /* Card wrapper (keeps JobCard centered inside) */
-.Card {
+.Job-card {
     width: 100%;
-    max-width: 90%; /* keeps cards from becoming too wide */
+    max-width: 30rem; /* keeps cards from becoming too wide */
     background-color: #f9ead4;
     border: 1px solid darkslategrey;
     border-radius: 20px;

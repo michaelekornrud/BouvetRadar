@@ -4,7 +4,7 @@ function FilterSideBar() {
     const [cpvCategories] = CPVCategorieNamesList();
 
     return (
-        <div className="Filter">            
+        <div className="Filter-sidebar">            
             <h2>Filter</h2>
             <div className='Filter-options'>
             {
@@ -13,7 +13,7 @@ function FilterSideBar() {
                         <input type='checkbox' id={option.code} /> <p>{option.description}</p>
                     </div>
             )}
-        </div>
+            </div>
         </div>
     )
 }
