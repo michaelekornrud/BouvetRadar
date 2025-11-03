@@ -13,7 +13,7 @@ from exceptions import APITimeoutError, ExternalAPIError
 
 nuts_bp = Blueprint('nuts', __name__, url_prefix='/api/nuts')
     
-@nuts_bp.route('/codes/', methods=['GET'])
+@nuts_bp.route('/codes', methods=['GET'])
 def get_structure_by_level():
     """Get hierarchical NUTS structure up to a specified level."""
 

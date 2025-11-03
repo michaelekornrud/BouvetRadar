@@ -21,5 +21,5 @@ class SSBClient:
             return response
         except requests.RequestException as e:
             raise ExternalAPIError("Failed to fetch data from external API.", service="SSB Service", original_error=e) from e
-        except requests.Timeout as e:
+        except requests.Timeout:
             raise APITimeoutError(service="SSB NUTS", timeout_seconds=30) 

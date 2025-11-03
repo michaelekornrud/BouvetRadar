@@ -13,7 +13,7 @@ from exceptions import APITimeoutError, ExternalAPIError
 
 styrk_bp = Blueprint('styrk', __name__, url_prefix='/api/styrk')
 
-@styrk_bp.route('codes/', methods=['GET'])
+@styrk_bp.route('/codes', methods=['GET'])
 def get_structure_by_level():
     """Get hierarchical STYRK structure up to a specified level."""
 
