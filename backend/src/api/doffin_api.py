@@ -3,53 +3,82 @@ API endpoint(s) for Doffin data
 Provides RESTful access to Doffin data for frontend visualization
 """
 
-import requests
-
 from flask import jsonify, Blueprint, request
 from ..service.doffin_service import DoffinService
-from ..validation.doffin_validators import (
-    validate_hits_per_page,
-    validate_page,
-    validate_search_str,
-    validate_cpv_codes,
-    validate_location_ids,
-    validate_status
+from ..validation.doffin_validators import DoffinSearchParams
+
+from exceptions import (
+    APITimeoutError,
+    ExternalAPIError, 
+    ValidationError,
+    InvalidParameterTypeError
 )
 
-from exceptions import APITimeoutError, ExternalAPIError
-
 doffin_bp = Blueprint('doffin', __name__, url_prefix='/api/doffin')
+
+@doffin_bp.errorhandler(ValidationError)
+def handle_validation_error(e):
+    """Handle validation errors."""
+    return jsonify({
+        "success": False,
+        "error": str(e)
+    }), 400
+
+
+@doffin_bp.errorhandler(InvalidParameterTypeError)
+def handle_invalid_parameter_type(e):
+    """Handle invalid parameter type errors."""
+    return jsonify({
+        "success": False,
+        "error": str(e)
+    }), 400
+
+# TODO: Add logger to log the error details
+@doffin_bp.errorhandler(ExternalAPIError)
+def handle_external_api_error(e):
+    """Handle external API errors."""
+    return jsonify({
+        "success": False,
+        "error": "An error occurred while communicating with an external service"
+    }), 502
+
+# TODO: Add logger to log the error details
+@doffin_bp.errorhandler(APITimeoutError)
+def handle_api_timeout(e):
+    """Handle API timeout errors."""
+    return jsonify({
+        "success": False,
+        "error": "Request timed out"
+    }), 504
+
+# TODO: Add logger to log the error details
+@doffin_bp.errorhandler(500)
+def handle_internal_error(e):
+    """Handle unexpected internal errors."""
+    # Log the error here for debugging
+    return jsonify({
+        "success": False,
+        "error": "An internal error occurred"
+    }), 500
+
 
 @doffin_bp.route('/search', methods=['GET'])
 def search_doffin_for_data():
     """Search for data based on input on the Doffin API"""
     
     # Validate all parameters
-    search_str = validate_search_str(request.args.get('search'))
-    cpv_codes = validate_cpv_codes(request.args.getlist('cpvCode'))
-    location_ids = validate_location_ids(request.args.getlist('location'))
-    status = validate_status(request.args.getlist('status'))
-    hits_per_page = validate_hits_per_page(request.args.get('hitsPerPage', '100'))
-    page = validate_page(request.args.get('page', '1'))
+    params = DoffinSearchParams.from_request_args(request.args)
     
     # Call service
-    try:
-        service = DoffinService()
-        result = service.search_notices(
-            search_str=search_str,
-            cpv_codes=cpv_codes,
-            location_ids=location_ids,
-            status=status,
-            page=page,
-            num_hits_per_page=hits_per_page
-        )
-        return jsonify(result)
-    except requests.Timeout:
-        raise APITimeoutError(service="Doffin", timeout_seconds=30)
-    except requests.RequestException as e:
-        raise ExternalAPIError(
-            message="Failed to connect to Doffin API",
-            service="Doffin",
-            original_error=e
-        )
+    service = DoffinService()
+    result = service.search_notices(
+        search_str=params.search_str,
+        cpv_codes=params.cpv_codes,
+        location_ids=params.location_ids,
+        status=params.status,
+        page=params.page,
+        num_hits_per_page=params.hits_per_page
+    )
+    return jsonify(result)
+
     
