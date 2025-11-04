@@ -10,6 +10,52 @@ The Doffin API key is managed server-side via environment variables. No client-s
 
 ---
 
+## Error Response Format
+
+All API endpoints return consistent error responses with the following structure:
+
+### Error Response Structure
+```json
+{
+  "success": false,
+  "error": "Human-readable error message",
+  "error_code": 1000,
+  "error_name": "ERROR_NAME",
+  "details": {
+    "field": "parameter_name",
+    "additional": "context"
+  }
+}
+```
+
+### HTTP Status Codes
+- **400 Bad Request**: Invalid input, validation errors
+- **404 Not Found**: Resource not found (CPV code, NUTS code, etc.)
+- **500 Internal Server Error**: Internal processing errors
+- **502 Bad Gateway**: External API (Doffin, SSB) errors
+
+### Error Code Ranges
+- **1000-1999**: Validation errors (invalid input, missing parameters, wrong types)
+- **2000-2999**: Internal server errors (database, configuration issues)
+- **3000-3999**: External API errors (Doffin, SSB, NAV API failures)
+- **4000-4999**: Data processing errors (transformation, parsing failures)
+- **5000-5999**: Resource not found errors (CPV, NUTS, STYRK codes)
+
+### Common Error Codes
+| Code | Name | Description | Status |
+|------|------|-------------|--------|
+| 1000 | INVALID_INPUT | General validation error | 400 |
+| 1001 | MISSING_PARAMETER | Required parameter missing | 400 |
+| 1002 | INVALID_PARAMETER_TYPE | Parameter has wrong type | 400 |
+| 3001 | DOFFIN_API_ERROR | Doffin API communication failed | 502 |
+| 3002 | SSB_API_ERROR | SSB API communication failed | 502 |
+| 5000 | RESOURCE_NOT_FOUND | General resource not found | 404 |
+| 5001 | CPV_CODE_NOT_FOUND | Specific CPV code not found | 404 |
+| 5002 | NUTS_CODE_NOT_FOUND | Specific NUTS code not found | 404 |
+| 5003 | STYRK_CODE_NOT_FOUND | Specific STYRK code not found | 404 |
+
+---
+
 ## Health Check
 
 ### GET /health
@@ -108,11 +154,16 @@ GET /cpv/codes/48000000
 }
 ```
 
-**Error Response (404):**
+**Error Response (404 - Resource Not Found):**
 ```json
 {
   "success": false,
-  "error": "CPV code not found"
+  "error": "CPV code 99999999 not found",
+  "error_code": 5001,
+  "error_name": "CPV_CODE_NOT_FOUND",
+  "details": {
+    "code": 99999999
+  }
 }
 ```
 
@@ -190,11 +241,31 @@ GET /doffin/search?search=software&page=2&hitsPerPage=50
 }
 ```
 
-**Error Response (400):**
+**Error Response (400 - Validation Error):**
 ```json
 {
   "success": false,
-  "error": "Invalid input: ..."
+  "error": "Page must be a positive integer",
+  "error_code": 1002,
+  "error_name": "INVALID_PARAMETER_TYPE",
+  "details": {
+    "field": "page",
+    "received_value": "abc"
+  }
+}
+```
+
+**Error Response (502 - External API Error):**
+```json
+{
+  "success": false,
+  "error": "Doffin API Error: Failed to connect",
+  "error_code": 3001,
+  "error_name": "DOFFIN_API_ERROR",
+  "details": {
+    "service": "Doffin",
+    "original_error": "Connection timeout"
+  }
 }
 ```
 

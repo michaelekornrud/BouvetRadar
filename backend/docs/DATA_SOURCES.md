@@ -58,18 +58,26 @@ GET /search
 
 **Client:** `src/clients/doffin_client.py`
 - Handles HTTP communication with Doffin API
-- Manages authentication headers
+- Manages authentication headers (Ocp-Apim-Subscription-Key)
 - Provides search and download methods
+- Raises ExternalAPIError or APITimeoutError on failures
 
 **Service:** `src/service/doffin_service.py`
 - Transforms location names to NUTS codes
 - Filters and processes search results
 - Coordinates with SSB service for location lookups
+- Raises appropriate exceptions for processing errors
+
+**Validation:** `src/validation/doffin_validators.py`
+- Validates search parameters using DoffinSearchParams dataclass
+- Type checks and range validation
+- Raises ValidationError or InvalidParameterTypeError
 
 **API:** `src/api/doffin_api.py`
-- Exposes search endpoint to frontend
-- Validates query parameters
+- Exposes search endpoint to frontend (`/api/doffin/search`)
+- Uses validation layer to parse request parameters
 - Returns formatted JSON responses
+- Registers blueprint-specific error handlers
 
 ### How to Get API Key
 
@@ -172,9 +180,10 @@ code;parentCode;level;name
 ### Data Usage in Application
 
 **Client:** `src/clients/ssb_client.py`
-- Fetches CSV data from SSB API
-- Handles ISO-8859-1 encoding
-- No authentication required
+- Fetches CSV data from SSB API (KLASS)
+- Handles ISO-8859-1 encoding conversion
+- No authentication required (public API)
+- Raises ExternalAPIError on HTTP failures
 
 **Service:** `src/service/ssb_service.py`
 Contains three service classes:
@@ -183,20 +192,27 @@ Contains three service classes:
    - Loads and processes CSV data into Pandas DataFrame
    - Provides lookup by code or name
    - Supports hierarchical queries
+   - Raises DataProcessingError for parsing failures
 
 2. **NUTSService**
    - Specialized for geographical classifications
    - Methods: `get_regions()`, `get_counties()`, `get_municipalities()`
    - Provides hierarchical structure by level
+   - Raises NUTSCodeNotFoundError when codes don't exist
 
 3. **STYRKService**
    - Specialized for occupation classifications
    - Methods: `get_major_groups()`, `get_minor_groups()`, etc.
    - Provides hierarchical structure by level
+   - Raises STYRKCodeNotFoundError when codes don't exist
+
+**Validation:** `src/validation/ssb_validators.py`
+- Validates NUTS and STYRK code parameters
+- Type checking for code formats
 
 **API:**
-- `src/api/nuts_api.py` - Exposes NUTS endpoints
-- `src/api/styrk_api.py` - Exposes STYRK endpoints
+- `src/api/nuts_api.py` - Exposes NUTS endpoints (`/api/nuts/*`)
+- `src/api/styrk_api.py` - Exposes STYRK endpoints (`/api/styrk/*`)
 
 ---
 

@@ -35,10 +35,14 @@ The backend follows a clear three-layer architecture with well-defined responsib
 ### Source Code Organization
 
 **API Layer (`src/api/`)** - Flask blueprints that define HTTP endpoints. Each file represents a resource group:
-- **cpv_api.py**: Endpoints for CPV code operations
-- **doffin_api.py**: Endpoints for Doffin procurement search
-- **nuts_api.py**: Endpoints for geographical classifications
-- **styrk_api.py**: Endpoints for occupation classifications
+- **cpv_api.py**: Endpoints for CPV code operations (`/api/cpv/*`)
+- **doffin_api.py**: Endpoints for Doffin procurement search (`/api/doffin/*`)
+- **nuts_api.py**: Endpoints for geographical classifications (`/api/nuts/*`)
+- **styrk_api.py**: Endpoints for occupation classifications (`/api/styrk/*`)
+
+**Validation Layer (`src/validation/`)** - Input validation and sanitization:
+- **doffin_validators.py**: Validates Doffin search parameters using dataclasses
+- **ssb_validators.py**: Validates SSB endpoint parameters
 
 **Service Layer (`src/service/`)** - Business logic and data processing:
 - **cpv_service.py**: CPV code utilities and search functionality
@@ -48,6 +52,15 @@ The backend follows a clear three-layer architecture with well-defined responsib
 **Client Layer (`src/clients/`)** - HTTP clients for external APIs:
 - **doffin_client.py**: Communicates with Doffin API
 - **ssb_client.py**: Communicates with SSB API
+
+**Exception Hierarchy (`exceptions/`)** - Custom exception system:
+- **bouvet_radar_exception.py**: Base exception class with status codes
+- **error_codes.py**: Centralized ErrorCodes enum (1000-5999)
+- **validation_exceptions.py**: Validation errors (400 status)
+- **external_api_exceptions.py**: External service errors (502 status)
+- **internal_api_exceptions.py**: Internal errors (500 status)
+- **resource_exceptions.py**: Resource not found errors (404 status)
+- **processing_exceptions.py**: Data processing errors
 
 **Tests (`tests/`)** - Test suite using pytest:
 - **test_requests/**: Tests for HTTP request handling
@@ -77,9 +90,9 @@ The project follows PEP 8 style guidelines with specific conventions for maintai
 
 **Blueprint Organization:** Each resource type has its own blueprint with a URL prefix, keeping routes organized and maintainable.
 
-**Error Handling:** All endpoints use try-except blocks to gracefully handle errors and return appropriate HTTP status codes (400 for validation errors, 500 for server errors).
+**Error Handling:** The application uses a custom exception hierarchy. Instead of try-except blocks, raise specific exceptions (ValidationError, ExternalAPIError, etc.) and let error handlers format the response.
 
-**Response Format:** All API responses follow a consistent JSON structure with `success`, `data`, and `error` fields.
+**Response Format:** All API responses follow a consistent JSON structure with `success`, `data`, and optional `error`, `error_code`, and `details` fields.
 
 ---
 
@@ -89,13 +102,21 @@ The project follows PEP 8 style guidelines with specific conventions for maintai
 
 When adding new functionality, follow the layered architecture approach:
 
-**Layer 1 - Client (if needed):** If integrating a new external API, create a client class that handles HTTP communication, authentication, and returns raw data.
+**Layer 1 - Exception (if needed):** If you need a new type of error, add it to the appropriate exception module. Define error codes in `error_codes.py` first, then implement the exception class.
 
-**Layer 2 - Service:** Implement business logic in a service class. This layer transforms raw data, applies business rules, and coordinates between multiple data sources.
+**Layer 2 - Client (if needed):** If integrating a new external API, create a client class that handles HTTP communication, authentication, and raises ExternalAPIError on failures.
 
-**Layer 3 - API:** Create Flask blueprint endpoints that validate requests, call service methods, and format responses as JSON.
+**Layer 3 - Validation (if needed):** Create validator functions or dataclass validators for request parameters. Use type hints and raise ValidationError or InvalidParameterTypeError for invalid inputs.
 
-**Testing:** Write tests for each layer, using mocks for external dependencies. Unit tests cover service logic, while integration tests verify endpoint behavior.
+**Layer 4 - Service:** Implement business logic in a service class. This layer transforms raw data, applies business rules, coordinates between multiple data sources, and raises appropriate exceptions.
+
+**Layer 5 - API:** Create Flask blueprint endpoints that:
+1. Use validators to parse and validate request parameters
+2. Call service methods with validated data
+3. Format successful responses as JSON
+4. Register blueprint-specific error handlers
+
+**Testing:** Write tests for each layer, using mocks for external dependencies. Unit tests cover validation and service logic, while integration tests verify endpoint behavior.
 
 **Registration:** Register new blueprints in `main.py` to make endpoints accessible.
 
@@ -179,6 +200,131 @@ New configuration values should be added through environment variables:
 2. Load it using `python-dotenv` in the service that needs it
 3. Provide sensible defaults where appropriate
 4. Document the variable in the README
+
+---
+
+## Error Handling Best Practices
+
+### Using the Exception Hierarchy
+
+The application uses a custom exception system for consistent error handling. Instead of returning error tuples or using generic exceptions, raise specific custom exceptions:
+
+**Don't do this:**
+```python
+def validate_page(page_str: str):
+    try:
+        page = int(page_str)
+        if page < 1:
+            return None, "Page must be >= 1"
+        return page, None
+    except ValueError:
+        return None, "Invalid page number"
+```
+
+**Do this instead:**
+```python
+def validate_page(page_str: str) -> int:
+    try:
+        page = int(page_str)
+        if page < 1:
+            raise ValidationError("Page must be >= 1", field="page", value=page_str)
+        return page
+    except ValueError:
+        raise InvalidParameterTypeError("page", page_str, "integer")
+```
+
+### Exception Categories
+
+**Validation Errors (400):** Use when user input is invalid
+```python
+from exceptions import ValidationError, InvalidParameterTypeError, MissingParameterError
+
+# Invalid input
+raise ValidationError("Search string too long", field="search", value=search_str)
+
+# Wrong type
+raise InvalidParameterTypeError("page", "abc", "integer")
+
+# Missing required parameter
+raise MissingParameterError("cpvCode")
+```
+
+**Resource Errors (404):** Use when requested resource doesn't exist
+```python
+from exceptions import CPVCodeNotFoundError, NUTSCodeNotFoundError
+
+# Resource not found
+raise CPVCodeNotFoundError(48000000)
+raise NUTSCodeNotFoundError("NO999")
+```
+
+**External API Errors (502):** Use when external service fails
+```python
+from exceptions import ExternalAPIError, APITimeoutError
+
+# API error
+raise ExternalAPIError("Failed to fetch data", "Doffin", original_error=e)
+
+# Timeout
+raise APITimeoutError("Doffin", timeout=30, original_error=e)
+```
+
+**Internal Errors (500):** Use for unexpected internal issues
+```python
+from exceptions import InternalServerError, ConfigurationError
+
+# Configuration issue
+raise ConfigurationError("DOFFIN_API_KEY not set")
+
+# Unexpected error
+raise InternalServerError("Unexpected error processing data", original_error=e)
+```
+
+### Error Handler Registration
+
+**Global handlers** in `main.py` catch all custom exceptions:
+```python
+@app.errorhandler(BouvetRadarException)
+def handle_bouvet_radar_exception(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+```
+
+**Blueprint handlers** provide more specific handling:
+```python
+@cpv_bp.errorhandler(CPVCodeNotFoundError)
+def handle_not_found(e):
+    # Can add logging, metrics, etc.
+    return jsonify(e.to_dict()), e.status_code
+```
+
+### Adding New Error Codes
+
+When adding new error types:
+
+1. **Add to ErrorCodes enum** in `error_codes.py`:
+```python
+class ErrorCodes(Enum):
+    # Your new code in appropriate range
+    INVALID_DATE_FORMAT = 1003  # Validation error
+```
+
+2. **Create exception class** in appropriate module:
+```python
+class InvalidDateFormatError(BouvetRadarException):
+    def __init__(self, date_str: str):
+        super().__init__(
+            f"Invalid date format: {date_str}",
+            status_code=400,
+            error_code=ErrorCodes.INVALID_DATE_FORMAT,
+            details={"received_value": date_str, "expected_format": "YYYY-MM-DD"}
+        )
+```
+
+3. **Export from __init__.py** in exceptions module
+
+4. **Document in ARCHITECTURE.md** error codes section
 
 ---
 
