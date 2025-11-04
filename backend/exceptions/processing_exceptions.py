@@ -2,7 +2,7 @@
 
 
 from exceptions.error_codes import ErrorCodes
-from exceptions.bouvet_radar_ecxeption import BouvetRadarException
+from exceptions import BouvetRadarException
     
 class DataProcessingError(BouvetRadarException):
     """Raised when a data processing error occurs."""

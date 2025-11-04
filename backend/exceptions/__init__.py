@@ -8,7 +8,7 @@ various error scenarios throughout the application.
 from exceptions.error_codes import ErrorCodes
 
 # Base exception
-from exceptions.bouvet_radar_ecxeption import BouvetRadarException
+from exceptions.bouvet_radar_exception import BouvetRadarException
 
 # Validation exceptions (1000-1999)
 from exceptions.validation_exceptions import (

@@ -1,7 +1,7 @@
 """Internal API exceptions for the backend module."""
 
 from exceptions.error_codes import ErrorCodes
-from exceptions.bouvet_radar_ecxeption import BouvetRadarException
+from exceptions import BouvetRadarException
     
 
 class InternalServerError(BouvetRadarException):

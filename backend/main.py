@@ -6,7 +6,7 @@ from src.api.nuts_api import nuts_bp
 from src.api.styrk_api import styrk_bp
 from src.api.doffin_api import doffin_bp
 
-from exceptions.bouvet_radar_ecxeption import BouvetRadarException
+from exceptions import BouvetRadarException
 
     
 def create_app():
