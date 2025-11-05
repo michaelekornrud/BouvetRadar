@@ -1,22 +1,71 @@
 .App-main {
-  padding: 20px;
-  /* Allow main content to grow/shrink and push footer to the bottom */
-  flex: 1 1 auto;
+    padding: 1.5rem 0 1.5rem 1.5rem;
+    /* Allow main content to grow/shrink and push footer to the bottom */
+    flex: 1 0 auto;
+    margin: 0% 6rem 0% 0%;
+    height: fit-content;
+    gap: 2rem;
 }
 
-.Card {
+.Main {
+    display: flex;
+    flex-direction: row;
+    /* prevent sidebar height from stretching the card grid
+       (default align-items: stretch makes both children the same height) */
+    align-items: flex-start;
+}
+
+.Filter-sidebar {
+    width: 24rem;
+    text-align: left;
+}
+
+.Filter-sidebar p {
+    font-size: small;
+}
+
+.Filter-sidebar .Option {
+    display: flex;
+    align-items: flex-start;
+    margin: 0.5em;
+}
+
+.Filter-sidebar .Option p {
+    margin: 0%;
+}
+
+.Card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    justify-items: center;
+    /* Make grid rows/content align to the start of the grid area instead of
+       stretching to fill available height from the flex parent */
+    margin: 2rem;
+}
+
+/* Card wrapper (keeps JobCard centered inside) */
+.Job-card {
+    width: 100%;
+    max-width: 30rem; /* keeps cards from becoming too wide */
     background-color: #f9ead4;
     border: 1px solid darkslategrey;
     border-radius: 20px;
-    padding: 6px 18px 6px 18px;
-    min-width: fit-content;
-    width: 20%;
+    padding: 0.5em 1em;
+    margin: 5%;
+    box-sizing: border-box;
 }
 
-.Card h2 {
-    font-size: large;
-}
-
-.Card p {
+/* Inner card content (not title) */
+.Job-card p {
     font-size: small;
+    text-align: left;
+}
+
+.Job-card, .Job-card h3, .Job-card p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }

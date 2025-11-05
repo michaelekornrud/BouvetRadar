@@ -1,8 +1,8 @@
 import './style/App.css';
 import './style/MainPage.css';
-import Header from './util/header.js';
-import Footer from './util/footer.js';
-import JobCard from './util/jobCard.js';
+import Header from './components/header.js';
+import Footer from './components/footer.js';
+import MainPage from './components/mainPage.js';
 
 function App() {
   return (
@@ -14,15 +14,7 @@ function App() {
         <h1>BouvetRadar</h1>
       </div>
       <main className='App-main'>
-        <div className='Card'>
-          <JobCard
-            employer="Bouvet"
-            title="Frontend Developer"
-            location="Sandvika"
-            expirationDate="31-12-2025"
-            source="LinkedIn"
-          />
-        </div>
+        <MainPage />
       </main>
       <footer className="App-footer">
         <Footer />
