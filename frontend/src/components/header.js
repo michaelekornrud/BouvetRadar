@@ -1,7 +1,7 @@
 function Header() {
   return (
-    <div className="Header">
-        <div className="Header-logo">
+    <div className="App-header-wrap">
+        <div className="App-header-logo">
           <img src="/Bouvet_Logo_Colossus.svg" alt="Bouvet Logo" />
         </div>
     </div>
