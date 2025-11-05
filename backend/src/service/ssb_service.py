@@ -6,8 +6,10 @@ from enum import IntEnum
 import pandas as pd
 
 from src.clients.ssb_client import SSBClient
+from utils import get_logger
 from exceptions import DataProcessingError, ParsingError
 
+logger = get_logger(__name__)
 
 class SSBLevel(IntEnum):
     """SSB hierarchy levels for both NUTS and STYRK classifications."""
@@ -43,6 +45,11 @@ class SSBService:
             DataProcessingError: If required columns are missing
             ParsingError: If CSV parsing fails
         """
+        logger.info(
+            "Loading SSB classification data from API",
+            extra={"version": self._version}
+        )
+
         # Fetch data via client
         response = self._client.get_classification_version(self._version)
         
@@ -52,6 +59,14 @@ class SSBService:
             self._df = pd.read_csv(csv_data, sep=";", encoding="utf-8")
             
         except (ValueError, pd.errors.ParserError) as e:
+            logger.error(
+                "Failed to parse SSB CSV data",
+                extra={
+                    "version": self._version,
+                    "error": str(e)
+                },
+                exc_info=True
+            )
             raise ParsingError(f"Failed to parse CSV data: {e}") from e
         
         # Validate required columns
@@ -59,6 +74,14 @@ class SSBService:
         missing_columns = required_columns - set(self._df.columns)
         
         if missing_columns:
+            logger.error(
+                "SSB CSV missing required columns",
+                extra={
+                    "version": self._version,
+                    "missing_columns": list(missing_columns),
+                    "found_columns": list(self._df.columns)
+                }
+            )
             raise DataProcessingError(
                 f"CSV missing required columns: {', '.join(missing_columns)}"
             )
@@ -66,6 +89,15 @@ class SSBService:
         # Keep only needed columns and create lookup dictionary
         self._df = self._df[list(required_columns)]
         self._codes_dict = dict(zip(self._df['code'], self._df['name']))
+
+        logger.info(
+            "SSB classification data loaded successfully",
+            extra={
+                "version": self._version,
+                "total_codes": len(self._codes_dict),
+                "columns": list(self._df.columns)
+            }
+        )
 
     def get_description(self, code: str) -> str | None:
         """Get description for a classification code.
@@ -234,9 +266,15 @@ class NUTSService:
         Returns:
             Nested structure of regions/counties/municipalities
         """
+        logger.debug(
+            "Building NUTS hierarchical structure",
+            extra={"max_level": level}
+        )
+
         regions = self.get_regions()
 
         if level == SSBLevel.LEVEL_1:
+            logger.debug(f"Returning {len(regions)} regions (level 1 only)")
             return regions
 
         # Build hierarchy by level
@@ -254,6 +292,18 @@ class NUTSService:
                 county['municipalities'] = self.get_municipalities(county['code'])
             
             region['counties'] = counties
+
+        logger.debug(
+            "NUTS hierarchy built successfully",
+            extra={
+                "max_level": level,
+                "regions": len(regions),
+                "total_items": sum(
+                    1 + len(r.get('counties', []))
+                    for r in regions
+                )
+            }
+        )
 
         return regions
 
@@ -318,9 +368,15 @@ class STYRKService:
         Returns:
             Nested structure of profession groups/subgroups/roles/titles
         """
+        logger.debug(
+            "Building STYRK hierarchical structure",
+            extra={"max_level": level}
+        )
+
         profession_groups = self.get_major_groups()
 
         if level == SSBLevel.LEVEL_1:
+            logger.debug(f"Returning {len(profession_groups)} major groups (level 1 only)")
             return profession_groups
 
         # Build hierarchy by level
@@ -346,5 +402,17 @@ class STYRKService:
                 subgroup['roles'] = roles
             
             group['subgroups'] = subgroups
+
+        logger.debug(
+            "STYRK hierarchy built successfully",
+            extra={
+                "max_level": level,
+                "major_groups": len(profession_groups),
+                "total_items": sum(
+                    1 + len(g.get('subgroups', []))
+                    for g in profession_groups
+                )
+            }
+        )
 
         return profession_groups

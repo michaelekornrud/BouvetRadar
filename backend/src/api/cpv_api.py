@@ -7,20 +7,21 @@ from flask import jsonify, request, Blueprint
 import sys
 import os
 
+from src.utils import get_logger
 from exceptions import CPVCodeNotFoundError, InvalidParameterTypeError
-
-
 
 # Add the parent directory to Python path to import constants
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.service.cpv_service import CPVService, CPV_CODES
 
+logger = get_logger(__name__)
 cpv_bp = Blueprint('cpv', __name__, url_prefix='/api/cpv')
 
 # Error handlers for the blueprint
 @cpv_bp.errorhandler(CPVCodeNotFoundError)
 def handle_not_found(e):
+    logger.error(f"CPV Code Not Found Error: {e}")
     """Handle CPV code not found errors."""
     return jsonify({
         "success": False,
@@ -31,6 +32,7 @@ def handle_not_found(e):
 @cpv_bp.errorhandler(InvalidParameterTypeError)
 def handle_invalid_parameter(e):
     """Handle invalid parameter errors."""
+    logger.error(f"Invalid Parameter Type Error: {e}")
     return jsonify({
         "success": False,
         "error": str(e)
@@ -40,7 +42,7 @@ def handle_invalid_parameter(e):
 @cpv_bp.errorhandler(500)
 def handle_internal_error(e):
     """Handle unexpected internal errors."""
-    # Log the error here for debugging
+    logger.error(f"An internal error occured: {e}")
     return jsonify({
         "success": False,
         "error": "An internal error occurred"

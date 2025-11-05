@@ -7,6 +7,7 @@ from flask import jsonify, Blueprint, request
 
 from ..service.ssb_service import STYRKService
 from ..validation.ssb_validators import validate_styrk_level
+from utils import get_logger
 from exceptions import (
     APITimeoutError, 
     ExternalAPIError,
@@ -15,10 +16,12 @@ from exceptions import (
 )
 
 styrk_bp = Blueprint('styrk', __name__, url_prefix='/api/styrk')
+logger = get_logger(__name__)
 
 @styrk_bp.errorhandler(ValidationError)
 def handle_validation_error(e):
     """Handle validation errors."""
+    logger.error(f"ValidationError: {e}")
     return jsonify({
         "success": False,
         "error": str(e)
@@ -27,6 +30,7 @@ def handle_validation_error(e):
 @styrk_bp.errorhandler(InvalidParameterTypeError)
 def handle_invalid_parameter_type(e):
     """Handle invalid parameter type errors."""
+    logger.error(f"InvalidParameterTypeError: {e}")
     return jsonify({
         "success": False,
         "error": str(e)
@@ -36,7 +40,7 @@ def handle_invalid_parameter_type(e):
 @styrk_bp.errorhandler(ExternalAPIError)
 def handle_external_api_error(e):
     """Handle external API errors."""
-    # TODO: Add logger to log the error details
+    logger.error(f"ExternalAPIError: {e}")
     return jsonify({
         "success": False,
         "error": "An error occurred while communicating with an external service"
@@ -46,7 +50,7 @@ def handle_external_api_error(e):
 @styrk_bp.errorhandler(APITimeoutError)
 def handle_api_timeout(e):
     """Handle API timeout errors."""
-    # TODO: Add logger to log the error details
+    logger.error(f"APITimeoutError: {e}")
     return jsonify({
         "success": False,
         "error": "Request timed out"
@@ -56,7 +60,7 @@ def handle_api_timeout(e):
 @styrk_bp.errorhandler(500)
 def handle_internal_error(e):
     """Handle unexpected internal errors."""
-    # TODO: Add logger to log the error details
+    logger.error(f"An internal server error occured: {e}")
     return jsonify({
         "success": False,
         "error": "An internal error occurred"

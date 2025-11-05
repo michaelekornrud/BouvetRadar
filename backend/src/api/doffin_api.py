@@ -37,30 +37,28 @@ def handle_invalid_parameter_type(e):
         "error": str(e)
     }), 400
 
-# TODO: Add logger to log the error details
 @doffin_bp.errorhandler(ExternalAPIError)
 def handle_external_api_error(e):
     """Handle external API errors."""
-    logger.error(f"An error occurred while communicating with an external service: {e}")
+    logger.error(f"ExternalAPIError: {e}")
     return jsonify({
         "success": False,
         "error": "An error occurred while communicating with an external service"
     }), 502
 
-# TODO: Add logger to log the error details
 @doffin_bp.errorhandler(APITimeoutError)
 def handle_api_timeout(e):
     """Handle API timeout errors."""
+    logger.error(f"APITimeoutError: {e}")
     return jsonify({
         "success": False,
         "error": "Request timed out"
     }), 504
 
-# TODO: Add logger to log the error details
 @doffin_bp.errorhandler(500)
 def handle_internal_error(e):
     """Handle unexpected internal errors."""
-    # Log the error here for debugging
+    logger.error(f"An internal server error occured: {e}")
     return jsonify({
         "success": False,
         "error": "An internal error occurred"

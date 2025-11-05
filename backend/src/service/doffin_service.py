@@ -107,6 +107,8 @@ class DoffinService:
             _resolve_location_ids(["Oslo", "NO081"])  # → ["NO0301", "NO081"]
             _resolve_location_ids(["Akershusss"])     # → ValidationError
         """
+        logger.debug(f"Resolving {len(location_ids)} location identifiers")
+
         resolved_codes = []
         invalid_locations = []
         
@@ -138,6 +140,8 @@ class DoffinService:
                 field="location",
                 value=invalid_locations
             )
+        
+        logger.debug(f"Resolved {len(location_ids)} locations to {len(resolved_codes)} NUTS codes")
         
         return resolved_codes
 
