@@ -2,8 +2,10 @@
 import requests
 from requests.exceptions import Timeout, ConnectionError, HTTPError, RequestException
 
-
+from utils import get_logger
 from exceptions import ExternalAPIError, APITimeoutError
+
+logger = get_logger(__name__)
 
 class SSBClient:
     """Handles raw HTTP communication with the SSB Klass API."""
@@ -53,12 +55,14 @@ class SSBClient:
             return response
             
         except Timeout as e:
+            logger.exception(f"Timeout Error: {e}")
             raise APITimeoutError(
                 service="SSB Klass API",
                 timeout_seconds=self.timeout
             ) from e
             
         except HTTPError as e:
+            logger.exception(f"HTTP Error: {e}")
             status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
                 f"SSB API returned error status {status_code}",
@@ -67,6 +71,7 @@ class SSBClient:
             ) from e
             
         except ConnectionError as e:
+            logger.exception(f"Connection Error: {e}")
             raise ExternalAPIError(
                 "Connection to SSB API failed",
                 service="SSB Klass API",
@@ -74,6 +79,7 @@ class SSBClient:
             ) from e
             
         except RequestException as e:
+            logger.exception(f"Request Exception: {e}")
             raise ExternalAPIError(
                 "Unexpected error calling SSB API",
                 service="SSB Klass API",

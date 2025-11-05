@@ -17,7 +17,7 @@ class DoffinSearchParams:
     page: int = 1
 
     @classmethod
-    def from_request_args(cls, args) -> 'DoffinSearchParams':
+    def validate_and_create(cls, args) -> 'DoffinSearchParams':
         """Create validated parameters from Flask request.args.
         
         Args:
@@ -113,24 +113,13 @@ def validate_search_str(search_str: str | None) -> str | None:
         search_str: Search string from request
         
     Returns:
-        Validated search string or None if not provided
-        
-    Raises:
-        ValidationError: If search string is whitespace-only
+        Validated search string or None if not provided/empty
     """
-    if search_str is None:
+    if not search_str:
         return None
     
     stripped = search_str.strip()
-    
-    if not stripped:
-        raise ValidationError(
-            "Parameter 'search' cannot be empty or whitespace-only",
-            field="search",
-            value=search_str
-        )
-    
-    return stripped
+    return stripped if stripped else None
 
 
 def validate_cpv_codes(cpv_codes_list: list[str]) -> list[str] | None:
@@ -172,7 +161,7 @@ def validate_cpv_codes(cpv_codes_list: list[str]) -> list[str] | None:
 def validate_location_ids(location_ids_list: list[str]) -> list[str] | None:
     """Validate location IDs parameter.
     
-    Location IDs can be NUTS codes (e.g., 'NO0301') or municipality names.
+    Location IDs can be NUTS codes (e.g., 'NO0301') or county / region names.
     
     Args:
         location_ids_list: List of location IDs from request

@@ -3,10 +3,14 @@
 import requests
 from requests.exceptions import Timeout, ConnectionError, HTTPError, RequestException
 
+from src.utils import get_logger
 from exceptions import ExternalAPIError, APITimeoutError
+
+logger = get_logger(__name__)
 
 class DoffinClient:
     """Handles raw HTTP communication with the Doffin API."""
+
     
     BASE_URL = "https://api.doffin.no/public/v2"
     DEFAULT_TIMEOUT = 30  # seconds
@@ -47,12 +51,14 @@ class DoffinClient:
             return response
             
         except Timeout as e:
+            logger.exception(f"Timeout exception: {e}")
             raise APITimeoutError(
                 f"Doffin API request timed out after {self.timeout}s"
             ) from e
             
         except HTTPError as e:
             # HTTP errors (4xx/5xx responses)
+            logger.exception(f"HTTP Error: {e}")
             status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
                 f"Doffin API returned error status {status_code}",
@@ -61,6 +67,7 @@ class DoffinClient:
             
         except ConnectionError as e:
             # Network/connection errors
+            logger.exception(f"Failed to connect to Doffin API : {e}")
             status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
                 f"Connection to Doffin API failed with status {status_code}",
@@ -69,6 +76,7 @@ class DoffinClient:
             
         except RequestException as e:
             # Catch-all for any other requests exceptions
+            logger.exception(f"Unexpected error callig Doffin API: {e}")
             status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
                 f"Unexpected error calling Doffin API, status {status_code}",

@@ -5,12 +5,14 @@ import re
 
 from dotenv import load_dotenv
 
+from utils import get_logger
 from ..clients.doffin_client import DoffinClient
 from ..service.ssb_service import SSBService
 from exceptions import ValidationError
 
 # Load environment variables
 load_dotenv()
+logger = get_logger(__name__)
 
 class DoffinService:
     """Handles Doffin business logic and data transformations."""
@@ -82,6 +84,8 @@ class DoffinService:
         if status:
             params["status"] = status
 
+        logger.info(f"Searching Doffin notices with parameters: {params}")
+
         return self.client.search(params=params)
 
     def _resolve_location_ids(self, location_ids: list[str]) -> list[str]:
@@ -114,27 +118,23 @@ class DoffinService:
                 # Verify it exists in the database
                 if self.ssb_service.get_description(location):
                     resolved_codes.append(location)
-                    print(f"Validated NUTS code: {location}")
                 else:
-                    print(f"NUTS code '{location}' not found in database")
                     invalid_locations.append(location)
             
-            # Case 2: Municipality name (e.g., 'Oslo', 'Akershus')
+            # Case 2: County / Region name (e.g., 'Oslo', 'Akershus')
             else:
-                code = self.ssb_service.get_code_by_name(location, max_level=3)
+                code = self.ssb_service.get_code_by_name(location, max_level=2)
                 if code:
                     resolved_codes.append(code)
-                    print(f"Resolved '{location}' → NUTS code '{code}'")
                 else:
-                    print(f"Municipality name '{location}' not found")
                     invalid_locations.append(location)
         
         # Fail fast with clear error message
         if invalid_locations:
             raise ValidationError(
-                f"Invalid location(s): {', '.join(invalid_locations)}. "
+                f"Invalid location(s): '{', '.join(invalid_locations)}'. "
                 f"Must be valid NUTS codes (e.g., 'NO081') or "
-                f"Norwegian municipality names (e.g., 'Oslo').",
+                f"Norwegian county / region names (e.g., 'Oslo').",
                 field="location",
                 value=invalid_locations
             )
