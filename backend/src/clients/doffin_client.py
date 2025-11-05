@@ -55,19 +55,24 @@ class DoffinClient:
             # HTTP errors (4xx/5xx responses)
             status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
-                f"Doffin API returned error status {status_code}: {e}"
+                f"Doffin API returned error status {status_code}",
+                service="Doffin Client",
             ) from e
             
         except ConnectionError as e:
             # Network/connection errors
+            status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
-                f"Connection to Doffin API failed: {e}"
+                f"Connection to Doffin API failed with status {status_code}",
+                service="Doffin Client",
             ) from e
             
         except RequestException as e:
             # Catch-all for any other requests exceptions
+            status_code = e.response.status_code if e.response is not None else 'unknown'
             raise ExternalAPIError(
-                f"Unexpected error calling Doffin API: {e}"
+                f"Unexpected error calling Doffin API, status {status_code}",
+                service="Doffin Client",
             ) from e
 
     def search(self, params: dict) -> dict:

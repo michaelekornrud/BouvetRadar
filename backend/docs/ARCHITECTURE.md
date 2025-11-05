@@ -359,7 +359,8 @@ def handle_bouvet_radar_exception(error):
 │          │      │              │      │ Params.from_     │
 └──────────┘      └──────────────┘      │ request_args()   │
                                         └─────────┬────────┘
-                                                  │ (validated params)
+                                         (validated params)
+                                                  │ 
                                                   ▼
                                         ┌────────────────┐
                                         │doffin_service  │
