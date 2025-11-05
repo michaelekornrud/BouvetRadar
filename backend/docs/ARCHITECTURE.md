@@ -2,7 +2,7 @@
 
 ## Overview
 
-BouvetRadar Backend follows a **three-layer architecture** pattern that separates concerns and promotes maintainability, testability, and scalability.
+BouvetRadar Backend follows a **four-layer architecture** pattern that separates concerns and promotes maintainability, testability, and scalability.
 
 ## Architecture Layers
 

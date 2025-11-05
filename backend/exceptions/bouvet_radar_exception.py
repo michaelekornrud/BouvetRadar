@@ -3,7 +3,7 @@
 from exceptions.error_codes import ErrorCodes
 
 class BouvetRadarException(Exception):
-    """Base ecxeption for all BouvetRadar errors."""
+    """Base exception for all BouvetRadar errors."""
 
     def __init__(
             self, 

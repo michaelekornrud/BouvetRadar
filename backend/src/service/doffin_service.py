@@ -31,12 +31,12 @@ class DoffinService:
             raise ValueError("DOFFIN_API_KEY not found in environment variables")
         
         self.client = DoffinClient(api_key=api_key)
-        self.ssb_service = SSBService(version=2482)  # Uses version "2482" internally
+        self.ssb_service = SSBService(version=2482) 
 
     def search_notices(
         self,
         search_str: str | None = None,
-        cpv_codes: list[str] | None = None,  # ✅ Fixed: strings, not ints
+        cpv_codes: list[str] | None = None, 
         location_ids: list[str] | None = None,
         status: list[str] | None = None,
         page: int = 1,

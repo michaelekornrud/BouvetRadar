@@ -6,14 +6,14 @@ from exceptions import BouvetRadarException
     
 class DataProcessingError(BouvetRadarException):
     """Raised when a data processing error occurs."""
-    def __init__(self, massage: str, operation:str | None = None):
+    def __init__(self, message: str, operation:str | None = None):
         details = {}
 
         if operation:
             details["operation"] = operation
 
         super().__init__(
-            message=massage,
+            message=message,
             status_code=500,
             error_code=ErrorCodes.DATA_PROCESSING_ERROR,
             details=details
