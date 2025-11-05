@@ -1,33 +1,34 @@
 """
-API endpoints for NUTS codes
-Provides RESTful access to NUTS data for frontend visualization
+API endpoint(s) for Doffin data
+Provides RESTful access to Doffin data for frontend visualization
 """
 
 from flask import jsonify, Blueprint, request
+from ..service.doffin_service import DoffinService
+from ..validation.doffin_validators import DoffinSearchParams
 
-from ..service.ssb_service import NUTSService
-from ..validation.ssb_validators import validate_nuts_level
 from utils import get_logger
 from exceptions import (
-    APITimeoutError, 
+    APITimeoutError,
     ExternalAPIError, 
-    ValidationError, 
+    ValidationError,
     InvalidParameterTypeError
 )
 
-nuts_bp = Blueprint('nuts', __name__, url_prefix='/api/nuts')
 logger = get_logger(__name__)
+doffin_bp = Blueprint('doffin', __name__, url_prefix='/api/doffin')
 
-@nuts_bp.errorhandler(ValidationError)
+@doffin_bp.errorhandler(ValidationError)
 def handle_validation_error(e):
     """Handle validation errors."""
-    logger.error(f"ValidationError: {e}")
+    logger.error(f"Validation Error: {e}")
     return jsonify({
         "success": False,
         "error": str(e)
     }), 400
 
-@nuts_bp.errorhandler(InvalidParameterTypeError)
+
+@doffin_bp.errorhandler(InvalidParameterTypeError)
 def handle_invalid_parameter_type(e):
     """Handle invalid parameter type errors."""
     logger.error(f"InvalidParameterTypeError: {e}")
@@ -36,7 +37,7 @@ def handle_invalid_parameter_type(e):
         "error": str(e)
     }), 400
 
-@nuts_bp.errorhandler(ExternalAPIError)
+@doffin_bp.errorhandler(ExternalAPIError)
 def handle_external_api_error(e):
     """Handle external API errors."""
     logger.error(f"ExternalAPIError: {e}")
@@ -45,7 +46,7 @@ def handle_external_api_error(e):
         "error": "An error occurred while communicating with an external service"
     }), 502
 
-@nuts_bp.errorhandler(APITimeoutError)
+@doffin_bp.errorhandler(APITimeoutError)
 def handle_api_timeout(e):
     """Handle API timeout errors."""
     logger.error(f"APITimeoutError: {e}")
@@ -54,7 +55,7 @@ def handle_api_timeout(e):
         "error": "Request timed out"
     }), 504
 
-@nuts_bp.errorhandler(500)
+@doffin_bp.errorhandler(500)
 def handle_internal_error(e):
     """Handle unexpected internal errors."""
     logger.error(f"An internal server error occured: {e}")
@@ -62,33 +63,25 @@ def handle_internal_error(e):
         "success": False,
         "error": "An internal error occurred"
     }), 500
-    
-@nuts_bp.route('/codes', methods=['GET'])
-def get_nuts_codes():
-    """Get hierarchical NUTS geographical structure.
-    
-    Query Parameters:
-        level (int): NUTS level to retrieve (1-3)
-            1 = Region
-            2 = County
-            3 = Municipality
-    
-    Returns:
-        JSON response with hierarchical structure
-        
-    Example:
-        GET /api/nuts/codes?level=2
-    """
 
-    # Validate level parameter
-    level = validate_nuts_level(request.args.get('level'))
-    
-    service = NUTSService()
-    structure = service.get_hierarchical_structure_by_level(level)
 
-    return jsonify({
-        "success": True,
-        "data": structure,
-        "total": len(structure),
-        "level": level
-    })
+@doffin_bp.route('/search', methods=['GET'])
+def search_doffin_for_data():
+    """Search for data based on input on the Doffin API"""
+    
+    # Validate all parameters
+    params = DoffinSearchParams.validate_and_create(request.args)
+    
+    # Call service
+    service = DoffinService()
+    result = service.search_notices(
+        search_str=params.search_str,
+        cpv_codes=params.cpv_codes,
+        location_ids=params.location_ids,
+        status=params.status,
+        page=params.page,
+        num_hits_per_page=params.hits_per_page
+    )
+    return jsonify(result)
+
+    
